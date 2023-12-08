@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+<title>Ajouter un type de variété</title>
+{% endblock %}
+
+{% block body %}
+<h2>Ajout d'un nouveau type de variété</h2>
+{% if error %}
+<p class=error><strong>Error:</strong> {{ error }}
+    {% endif %}
+<form method="post" action="/type-reparation/add">
+    <fieldset>
+        <legend>Nouveau type de réparation</legend>
+        <label for="libelle">Libelle du type de réparation</label><br>
+        <input id="libelle" type="text" name="libelle" value="" placeholder="Saisir le libelle du type de réparation" required><br>
+        <input type="submit" value="Creer" name="Valider" id="modifier">
+        <br>
+    </fieldset>
+</form>
+{% endblock %}
