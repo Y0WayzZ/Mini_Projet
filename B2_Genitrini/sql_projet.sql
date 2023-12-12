@@ -5,7 +5,7 @@ CREATE TABLE type_reparation(
     id_type INT AUTO_INCREMENT,
     libelle_type VARCHAR(32),
     PRIMARY KEY(id_type)
-                            );
+    );
 
 
 CREATE TABLE reparation(
@@ -17,7 +17,9 @@ CREATE TABLE reparation(
     type_reparation_id INT,
     photo VARCHAR(255),
     PRIMARY KEY(id_reparation),
+    CONSTRAINT fk_type_rep
     FOREIGN KEY(type_reparation_id) REFERENCES type_reparation(id_type)
+
 );
 
 
@@ -49,5 +51,14 @@ INSERT INTO reparation(id_reparation,libelle_reparation,immat_voiture,prix_repar
 (NULL,'Remplac. courroie distribution','XG-554-DD','440','2010-03-01',3,'intervention_8.png'),
 (NULL,'Remplac. courroie distribution','JK-103-DG','460','2001-05-06',3,'intervention_9.png');
 
-SELECT * FROM reparation;
-SELECT * FROM type_reparation;
+ALTER TABLE reparation DROP CONSTRAINT fk_type_rep;
+
+ALTER TABLE reparation ADD CONSTRAINT fk_type_rep
+FOREIGN KEY (type_reparation_id) REFERENCES type_reparation(id_type);
+
+SELECT *  FROM reparation;
+
+SELECT id_type, libelle_type, COUNT(reparation.type_reparation_id) AS nbr_reparation FROM type_reparation
+LEFT JOIN reparation on type_reparation.id_type = reparation.type_reparation_id
+WHERE type_reparation_id = reparation.type_reparation_id
+GROUP BY id_type, libelle_type;

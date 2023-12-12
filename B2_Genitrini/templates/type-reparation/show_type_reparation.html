@@ -17,7 +17,7 @@
         <tr>
           <th>Id</th>
           <th>Libelle</th>
-
+          <th>Nombre de réparation</th>
           <th>Editer</th>
           <th>Supprimer</th>
         </tr>
@@ -28,6 +28,7 @@
         <tr>
           <td>{{ ligne.id }}</td>
           <td>{{ ligne.libelle }}</td>
+          <td>{{ ligne.nbr_reparation }}</td>
           <td><a href="/variete/edit?id={{ ligne.id }}" class="btn btn-primary">Éditer</a></td>
           <td><a href="/variete/delete?id={{ ligne.id }}" class="btn btn-primary">Supprimer</a></td>
         </tr>

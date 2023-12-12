@@ -36,10 +36,10 @@ def show_layout():
 def show_type_reparation():
     mycursor = get_db().cursor()
     sql = '''
-    SELECT 
-    id_type AS id,
-    libelle_type AS libelle
-    FROM type_reparation;
+    SELECT id_type AS id, libelle_type AS libelle, COUNT(reparation.type_reparation_id) AS nbr_reparation FROM type_reparation
+    LEFT JOIN reparation on type_reparation.id_type = reparation.type_reparation_id
+    WHERE type_reparation_id = reparation.type_reparation_id
+    GROUP BY id_type, libelle_type;
     '''
     mycursor.execute(sql)
     type_reparation = mycursor.fetchall()
@@ -52,14 +52,10 @@ def show_type_reparation():
 def show_etat_variete():
     mycursor = get_db().cursor()
     sql = '''
-    SELECT 
-    culture.libelle_culture AS nom,
-    SUM(variete.stock) AS stock,
-    SUM(variete.prix_kg*variete.stock) AS prix
-    FROM variete
-    LEFT JOIN culture ON variete.culture = culture.id_culture
-    GROUP BY culture.id_culture
-    ORDER BY culture.id_culture;
+    SELECT id_type, libelle_type, COUNT(reparation.type_reparation_id) AS nbr_reparation FROM type_reparation
+    LEFT JOIN reparation on type_reparation.id_type = reparation.type_reparation_id
+    WHERE type_reparation_id = reparation.type_reparation_id
+    GROUP BY id_type, libelle_type;
     '''
     mycursor.execute(sql)
     stock = mycursor.fetchall()
@@ -124,36 +120,17 @@ def delete_variete():
     flash(message, 'alert-warning')
     return redirect('/variete/show')
 
-@app.route('/variete/edit', methods=['GET'])
+@app.route('/type-reparation/edit', methods=['GET'])
 def edit_variete():
     mycursor = get_db().cursor()
 
     sql = '''
-            SELECT culture.id_culture AS id_culture, culture.libelle_culture AS nom FROM culture;
+            SELECT id_type AS id, libelle_type AS nom FROM type_reparation;
             '''
     mycursor.execute(sql)
-    culture = mycursor.fetchall()
+    type_reparation = mycursor.fetchall()
 
-    sql = '''
-        SELECT saison.saison AS saison FROM saison;
-        '''
-    mycursor.execute(sql)
-    saison = mycursor.fetchall()
-
-    id = request.args.get('id', '')
-    sql = '''
-        SELECT variete.id_variete AS id,
-        variete.libelle_variete AS nom,
-        variete.saison AS saison,
-        variete.culture AS culture,
-        variete.prix_kg AS prix,
-        variete.stock AS stock
-        FROM variete, culture
-        WHERE variete.id_variete=%s AND culture.id_culture = variete.culture;
-        '''
-    mycursor.execute(sql, (id))
-    variete = mycursor.fetchone()
-    return render_template('variete/edit_variete.html', variete=variete, culture=culture, saison=saison)
+    return render_template('edit_type_reparation.html', type_reparation=type_reparation)
 
 @app.route('/variete/edit', methods=['POST'])
 def valid_edit_variete():
