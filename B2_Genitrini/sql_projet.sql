@@ -58,7 +58,18 @@ FOREIGN KEY (type_reparation_id) REFERENCES type_reparation(id_type);
 
 SELECT *  FROM reparation;
 
+
 SELECT id_type, libelle_type, COUNT(reparation.type_reparation_id) AS nbr_reparation FROM type_reparation
 LEFT JOIN reparation on type_reparation.id_type = reparation.type_reparation_id
 WHERE type_reparation_id = reparation.type_reparation_id
 GROUP BY id_type, libelle_type;
+
+
+PREPARE stmt1 FROM 'UPDATE `reparation` SET `libelle_reparation` = (?) WHERE `libelle_reparation` = (?)';
+SET @value = 'Vidange Voiture';
+SET @value2 = 'Vidange';
+EXECUTE stmt1 USING @value, @value2;
+
+
+DEALLOCATE PREPARE stmt1;
+SELECT * FROM reparation;
