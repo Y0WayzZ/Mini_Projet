@@ -121,7 +121,7 @@ def delete_variete():
     return redirect('/variete/show')
 
 @app.route('/type-reparation/edit', methods=['GET'])
-def edit_variete():
+def edit_type_reparation():
     mycursor = get_db().cursor()
 
     sql = '''
@@ -132,8 +132,8 @@ def edit_variete():
 
     return render_template('edit_type_reparation.html', type_reparation=type_reparation)
 
-@app.route('/variete/edit', methods=['POST'])
-def valid_edit_variete():
+@app.route('/type-reparation/edit', methods=['POST'])
+def valid_edit_type_reparation():
     mycursor = get_db().cursor()
     id = request.form.get('id', '')
     nom = request.form.get('nom', '')
